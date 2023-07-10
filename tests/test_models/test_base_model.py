@@ -5,6 +5,7 @@ from unittest import TestCase
 from models.base_model import BaseModel
 from uuid import uuid4
 from time import sleep
+from datetime import datetime
 
 
 class TestBaseModel(TestCase):
@@ -69,3 +70,25 @@ class TestBaseModel(TestCase):
         regex = r'^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6}$'
         self.assertRegex(dict['created_at'], regex)
         self.assertRegex(dict['updated_at'], regex)
+
+    # Test __init__() with kwargs
+    def test_passing_class_attr(self):
+        """Test not adding __class__ as an attribute when passed."""
+        my_model = BaseModel(__class__="BaseModel")
+        self.assertFalse(hasattr(self, '__class__'))
+
+    def test_init_with_kwargs(self):
+        """Test creating an instance from a passed dictionary."""
+        my_model = BaseModel(name="My_First_Model", my_number=89)
+        self.assertTrue(hasattr(self, 'name'))
+        self.assertTrue(hasattr(self, 'my_number'))
+
+    def test_converting_strtime_to_datetime(self):
+        """Test that `created at` and `updated_at`
+        passed as str in the kwargs dict
+        are converted to datetime objects."""
+        my_model = BaseModel()
+        my_model_dict = my_model.to_dict()
+        my_new_model = BaseModel(**my_model_dict)
+        self.assertIsInstance(my_new_model.created_at, datetime)
+        self.assertIsInstance(my_new_model.updated_at, datetime)
