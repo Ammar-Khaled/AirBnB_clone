@@ -15,7 +15,7 @@ class BaseModel:
                 if key == '__class__':
                     continue
 
-                if key in ['created_at', 'upgraded_at']:
+                if key in ['created_at', 'updated_at']:
                     value = datetime.fromisoformat(value)
 
                 setattr(self, key, value)
@@ -25,7 +25,7 @@ class BaseModel:
             self.updated_at = self.created_at
 
     def __str__(self):
-        """Return a string represntation of the instance."""
+        """Return a string representation of the instance."""
         return "[{}] ({}) {}".format(
             self.__class__.__name__, self.id, self.__dict__)
 

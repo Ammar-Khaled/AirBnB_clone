@@ -14,12 +14,14 @@ class TestBaseModel(TestCase):
     def test_id_existence(self):
         """Test assigning id to the instance once created."""
         my_model = BaseModel()
+        self.assertTrue(hasattr(my_model, 'id'))
         self.assertIsNotNone(my_model.id)
 
     def test_id_type(self):
         """Asserts that id's type is str."""
         my_model = BaseModel()
         self.assertIsInstance(my_model.id, str)
+        self.assertGreater(len(my_model.id), 0)
 
     def test_id_uniqueness(self):
         """Test set of ids for uniqueness."""
@@ -47,7 +49,9 @@ class TestBaseModel(TestCase):
     def test___str__(self):
         """Test that __str__ returns string representation of the instance"""
         my_model = BaseModel()
-        self.assertRegex(my_model.__str__, r'[\w+] (\w+) {\w+}')
+        rg = r'^\[\w+\]\s\([a-zA-Z0-9]{8}\b-([a-zA-Z0-9]{4}\b-){3}'\
+            r'[a-zA-Z0-9]{12}\)\s\{.+\}$'
+        self.assertRegex(str(my_model), rg)
 
     # Test to_dict() method
     def test_set_attrs(self):
@@ -75,13 +79,13 @@ class TestBaseModel(TestCase):
     def test_passing_class_attr(self):
         """Test not adding __class__ as an attribute when passed."""
         my_model = BaseModel(__class__="BaseModel")
-        self.assertFalse(hasattr(self, '__class__'))
+        self.assertNotIsInstance(my_model.__class__, str)
 
     def test_init_with_kwargs(self):
         """Test creating an instance from a passed dictionary."""
         my_model = BaseModel(name="My_First_Model", my_number=89)
-        self.assertTrue(hasattr(self, 'name'))
-        self.assertTrue(hasattr(self, 'my_number'))
+        self.assertTrue(hasattr(my_model, 'name'))
+        self.assertTrue(hasattr(my_model, 'my_number'))
 
     def test_converting_strtime_to_datetime(self):
         """Test that `created at` and `updated_at`
