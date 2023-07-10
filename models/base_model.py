@@ -8,11 +8,21 @@ from datetime import datetime
 class BaseModel:
     """Define all common attributes/methods for all classes in project."""
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         """Initiate a BaseModel instance."""
-        self.id = str(uuid.uuid4())
-        self.created_at = datetime.now()
-        self.updated_at = self.created_at
+        if kwargs:
+            for key, value in kwargs.items():
+                if key == '__class__':
+                    continue
+
+                if key in ['created_at', 'upgraded_at']:
+                    value = datetime.fromisoformat(value)
+
+                setattr(self, key, value)
+        else:
+            self.id = str(uuid.uuid4())
+            self.created_at = datetime.now()
+            self.updated_at = self.created_at
 
     def __str__(self):
         """Return a string represntation of the instance."""
