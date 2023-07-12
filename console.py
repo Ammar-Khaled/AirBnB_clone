@@ -3,7 +3,7 @@
 import cmd
 from typing import cast
 from models import storage
-from utils import validate_args, cast_str_value, classes_to_str
+from utils import parse_str_dict, validate_args, cast_str_value, classes_to_str
 from utils import find_class_by_name, parse_command_syntax
 from models.base_model import BaseModel
 from models.user import User
@@ -22,13 +22,14 @@ class HBNBCommand(cmd.Cmd):
     def default(self, line):
         results = parse_command_syntax(line)
         if results:
-            className, action, args, _ = results
+            className, action, args = results
             if className in classes_to_str(HBNBCommand.__classes):
                 if f'do_{action}' in dir(self):
                     if action == 'update' and len(args) == 3:
                         command = f'update {className} {args[0]} {args[1]} \
 "{args[2]}"'
                     else:
+                        args = [str(a) for a in args]
                         command = f'{action} {className} {" ".join(args)}'
                     self.onecmd(command)
                     return
@@ -116,7 +117,13 @@ class HBNBCommand(cmd.Cmd):
             return
 
         _, _, obj, key, val = results
-        # classes not allowed to be modified
+        if key and key[0] == '{':
+            for k, v in parse_str_dict(arg[arg.index('{'):]):
+                setattr(obj, k, v)
+                storage.save()
+            return
+
+        # attributes not allowed to be modified
         if key in ['id', 'created_at', 'updated_at']:
             print("** class doesn't allow modification **")
             return

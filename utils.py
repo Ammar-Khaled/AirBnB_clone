@@ -99,7 +99,7 @@ def cast_str_value(value):
 
 
 def parse_command_syntax(line):
-    """Parses a command line syntax into a class name, action, args, kwargs
+    """Parses a command line syntax into a class name, action, args
     Args:
         line (str): the command line syntax
 
@@ -115,10 +115,27 @@ def parse_command_syntax(line):
         call_attr = cast(ast.Attribute, call.func)
         className = cast(ast.Name, call_attr.value).id
         action = call_attr.attr
-        args = [cast(ast.Constant, const).value for const in call.args]
-        kwargs = {k.arg: cast(
-            ast.Constant, k.value).value for k in call.keywords}
+        args = []
+        for arg in call.args:
+            if isinstance(arg, ast.Constant):
+                args.append(arg.value)
+            elif isinstance(arg, ast.Dict):
+                d = dict()
+                for k, v in zip(arg.keys, arg.values):
+                    d[cast(ast.Constant, k).value] = cast(
+                        ast.Constant, v).value
+                args.append(d)
+        return className, action, args
+    except Exception:
+        return None
 
-        return className, action, args, kwargs
+
+def parse_str_dict(line):
+    """Parses dict as a string into key/value iterator"""
+    try:
+        expr = cast(ast.Expr, ast.parse(line, 'eval').body[0])
+        d = cast(ast.Dict, expr.value)
+        for k, v in zip(d.keys, d.values):
+            yield cast(ast.Constant, k).value, cast(ast.Constant, v).value
     except Exception:
         return None
