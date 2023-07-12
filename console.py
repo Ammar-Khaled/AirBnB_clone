@@ -25,9 +25,8 @@ class HBNBCommand(cmd.Cmd):
             className, action, args, _ = results
             if className in classes_to_str(HBNBCommand.__classes):
                 if f'do_{action}' in dir(self):
-                    args = [f'"{arg}"' if type(
-                        arg) is str else arg for arg in args]
                     command = f'{action} {className} {" ".join(args)}'
+                    # !TODO: some args requres quotes and some don't
                     self.onecmd(command)
                     return
         print(f"*** Unknown syntax: {line}")
