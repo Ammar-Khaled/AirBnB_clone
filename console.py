@@ -2,16 +2,22 @@
 """The console entry point of the AirBnB clone"""
 import cmd
 from typing import cast
-from models.base_model import BaseModel
 from models import storage
-from utils import validate_args, cast_str_value
+from utils import validate_args, cast_str_value, classes_to_str
+from utils import find_class_by_name
+from models.base_model import BaseModel
+from models.user import User
+from models.place import Place
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
 
 
 class HBNBCommand(cmd.Cmd):
     """Class HBNBCommand to control the system without GUI"""
 
     prompt = '(hbnb) '
-    __classes = ["BaseModel", "User", "State", "City", "Amenity", "Place"]
+    __classes = [BaseModel, User, State, City, Amenity, Place]
 
     def emptyline(self):
         """Do nothing on empty line"""
@@ -25,7 +31,12 @@ class HBNBCommand(cmd.Cmd):
         if not results:
             return
 
-        obj = BaseModel()
+        cname = results[0]
+        cls = find_class_by_name(HBNBCommand.__classes, cname)
+        if not cls:
+            return
+
+        obj = cls()
         print(obj.id)
         obj.save()
 
@@ -37,7 +48,8 @@ class HBNBCommand(cmd.Cmd):
             all BaseModel"""
         args = arg.split()
         classname = args[0] if len(args) > 0 else None
-        if classname is not None and classname not in HBNBCommand.__classes:
+        if classname is not None and classname not in classes_to_str(
+                HBNBCommand.__classes):
             print("** class doesn't exist **")
             return
 
@@ -91,6 +103,7 @@ class HBNBCommand(cmd.Cmd):
         _, _, obj, key, val = results
         # classes not allowed to be modified
         if key in ['id', 'created_at', 'updated_at']:
+            print("** class doesn't allow modification **")
             return
 
         # handle double quotes
@@ -106,6 +119,8 @@ class HBNBCommand(cmd.Cmd):
         if type(val) in [int, str, float]:
             setattr(obj, cast(str, key), val)
             storage.save()
+        else:
+            print("** not a valid value **")
 
     def do_quit(self, _):
         """Quit command to exit the program"""

@@ -4,12 +4,29 @@ import ast
 from models import storage
 
 
+def classes_to_str(classes):
+    """Converts a list of classes to a list with their names as a string
+    Args:
+        classes (list[Class]): the list of classes"""
+    return [str(cls.__name__) for cls in classes]
+
+
+def find_class_by_name(classes, name):
+    """Finds a class by its name
+    Args:
+        classes (list[Class]): the list of classes
+        name (str): the class name"""
+    for cls in classes:
+        if cls.__name__ == name:
+            return cls
+
+
 def validate_args(args, classes, hasId=False, hasAttrs=False,
                   validateInstance=False):
     """validates the class name
     Args:
         args (list[str]): the arguments as a list of strings
-        classes (list[str]): the list of available classes
+        classes (list[Class]): the list of available classes
         hasId (bool): whether the class has an id argument at index 1
         hasAttrs (bool): whether the class has attributes arguments at 2 and 3
         validateInstance (bool): whether to search for the instance and return
@@ -26,7 +43,7 @@ def validate_args(args, classes, hasId=False, hasAttrs=False,
     if type(classname) is not str or len(classname) == 0:
         print("** class name missing **")
         return
-    if classname not in classes:
+    if classname not in classes_to_str(classes):
         print("** class doesn't exist **")
         return
     if hasId and (len(args) < 2 or len(args[1]) != 36):
