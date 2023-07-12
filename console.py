@@ -4,7 +4,7 @@ import cmd
 from typing import cast
 from models import storage
 from utils import validate_args, cast_str_value, classes_to_str
-from utils import find_class_by_name
+from utils import find_class_by_name, parse_command_syntax
 from models.base_model import BaseModel
 from models.user import User
 from models.place import Place
@@ -18,6 +18,19 @@ class HBNBCommand(cmd.Cmd):
 
     prompt = '(hbnb) '
     __classes = [BaseModel, User, State, City, Amenity, Place]
+
+    def default(self, line):
+        results = parse_command_syntax(line)
+        if results:
+            className, action, args, _ = results
+            if className in classes_to_str(HBNBCommand.__classes):
+                if f'do_{action}' in dir(self):
+                    args = [f'"{arg}"' if type(
+                        arg) is str else arg for arg in args]
+                    command = f'{action} {className} {" ".join(args)}'
+                    self.onecmd(command)
+                    return
+        print(f"*** Unknown syntax: {line}")
 
     def emptyline(self):
         """Do nothing on empty line"""
@@ -121,6 +134,20 @@ class HBNBCommand(cmd.Cmd):
             storage.save()
         else:
             print("** not a valid value **")
+
+    def do_count(self, arg):
+        """Count the stored instances for a class name
+        count <class-name>
+
+        Example:
+            count BaseModel"""
+        results = validate_args(arg.split(), HBNBCommand.__classes)
+        if not results:
+            return
+
+        className = results[0]
+        objs = storage.all()
+        print(len([key for key in objs.keys() if key.startswith(className)]))
 
     def do_quit(self, _):
         """Quit command to exit the program"""

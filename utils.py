@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """Utils functions for the console prompt"""
 import ast
+from typing import cast
 from models import storage
 
 
@@ -95,3 +96,29 @@ def cast_str_value(value):
     if type(b[0]) is not ast.Expr or type(b[0].value) is not ast.Constant:
         return None
     return b[0].value.value
+
+
+def parse_command_syntax(line):
+    """Parses a command line syntax into a class name, action, args, kwargs
+    Args:
+        line (str): the command line syntax
+
+    Example:
+        >>> parse_command_syntax(
+        >>>         '"BaseModel.show("d9a1b3bc-c104-4347-8432-33971115763c")')
+        ('BaseModel', 'show', ['d9a1b3bc-c104-4347-8432-33971115763c'])
+
+    Return: tuple|None"""
+    try:
+        expr = cast(ast.Expr, ast.parse(line).body[0])
+        call = cast(ast.Call, expr.value)
+        call_attr = cast(ast.Attribute, call.func)
+        className = cast(ast.Name, call_attr.value).id
+        action = call_attr.attr
+        args = [cast(ast.Constant, const).value for const in call.args]
+        kwargs = {k.arg: cast(
+            ast.Constant, k.value).value for k in call.keywords}
+
+        return className, action, args, kwargs
+    except Exception:
+        return None
