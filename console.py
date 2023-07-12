@@ -1,52 +1,17 @@
 #!/usr/bin/python3
 """The console entry point of the AirBnB clone"""
 import cmd
+from typing import cast
 from models.base_model import BaseModel
 from models import storage
-
-
-classes = ["BaseModel", "User", "State", "City", "Amenity", "Place",]
-
-
-def validate_classname(classname, classes):
-    """validates the class name
-    Args:
-        classname (str): the class name
-        classes (list): the list of classes"""
-
-    if type(classname) is not str or len(classname) == 0:
-        print("** class name missing **")
-        return False
-    if classname not in classes:
-        print("** class doesn't exist **")
-        return False
-    return True
-
-
-def get_filtered_objects(classname="", id=""):
-    """Returns the objects stored by Class name
-    Args:
-        classname (str): the class name
-        id (str): the instance id"""
-    if type(classname) is not str or type(id) is not str:
-        return []
-    query = f"{classname}.{id}"
-    objs = storage.all()
-    keys = filter(lambda x: str(x).find(query) != -1, objs.keys())
-    return [objs[key] for key in keys]
-
-
-def find_instance(classname, id):
-    """finds an instance of a class by id
-    Args:
-        classname (str): the class name
-        id (str): the instance id"""
+from utils import validate_args, cast_str_value
 
 
 class HBNBCommand(cmd.Cmd):
     """Class HBNBCommand to control the system without GUI"""
 
     prompt = '(hbnb) '
+    __classes = ["BaseModel", "User", "State", "City", "Amenity", "Place"]
 
     def emptyline(self):
         """Do nothing on empty line"""
@@ -56,7 +21,8 @@ class HBNBCommand(cmd.Cmd):
         """Creates a new instance of a model and saves it
         Example: create BaseModel"""
         args = arg.split()
-        if not validate_classname(args[0] if len(args) else None, classes):
+        results = validate_args(args, HBNBCommand.__classes)
+        if not results:
             return
 
         obj = BaseModel()
@@ -70,13 +36,15 @@ class HBNBCommand(cmd.Cmd):
         Example:
             all BaseModel"""
         args = arg.split()
-        if len(args) > 0 and args[0] not in classes:
+        classname = args[0] if len(args) > 0 else None
+        if classname is not None and classname not in HBNBCommand.__classes:
             print("** class doesn't exist **")
             return
 
-        results = get_filtered_objects(args[0] if len(args) > 0 else "")
-        results = list(map(lambda x: str(x), results))
-        print(results)
+        objs = storage.all()
+        data = [str(val) for key, val in objs.items()
+                if not classname or key.startswith(classname)]
+        print(data)
 
     def do_show(self, arg):
         """Shows an instance based on the class name and id
@@ -85,18 +53,10 @@ class HBNBCommand(cmd.Cmd):
         Example:
             show BaseModel d9a1b3bc-c104-4347-8432-33971115763c"""
         args = arg.split()
-        if not validate_classname(args[0] if len(args) else None, classes):
-            return
-        if len(args) < 2 or len(args[1]) != 36:
-            print("** instance id missing **")
-            return
-
-        query = f"{args[0]}.{args[1]}"
-        objs = storage.all()
-        if query in objs:
-            print(objs[query])
-        else:
-            print("** no instance found **")
+        results = validate_args(
+            args, HBNBCommand.__classes, hasId=True, validateInstance=True)
+        if results:
+            print(results[2])
 
     def do_destroy(self, arg):
         """Deletes an instance based on the class name and id
@@ -105,19 +65,47 @@ class HBNBCommand(cmd.Cmd):
         Example:
             destroy BaseModel d9a1b3bc-c104-4347-8432-33971115763c"""
         args = arg.split()
-        if not validate_classname(args[0] if len(args) else None, classes):
-            return
-        if len(args) < 2 or len(args[1]) != 36:
-            print("** instance id missing **")
+        results = validate_args(
+            args, HBNBCommand.__classes, hasId=True, validateInstance=True)
+        if not results:
             return
 
-        objs = storage.all()
-        query = f"{args[0]}.{args[1]}"
-        if query in objs:
-            del objs[query]
+        className, objs, obj, _, _ = results
+        del objs[f'{className}.{cast(BaseModel, obj).id}']
+        storage.save()
+
+    def do_update(self, arg):
+        """Updates an instance based on the class name and id
+        update <classname> <id> <attribute name> <attribute value>
+
+        Example:
+            update BaseModel d9a1b3bc-c104-4347-8432-33971115763c msg "Hi You"
+            """
+        args = arg.split()
+        results = validate_args(
+            args, HBNBCommand.__classes, hasId=True, validateInstance=True,
+            hasAttrs=True)
+        if not results:
+            return
+
+        _, _, obj, key, val = results
+        # classes not allowed to be modified
+        if key in ['id', 'created_at', 'updated_at']:
+            return
+
+        # handle double quotes
+        if val and val[0] == '"' and val[-1] != '"' and len(args) > 4:
+            new_val = [val]
+            for val in args[4:]:
+                new_val.append(val)
+                if val[-1] == '"':
+                    break
+            val = " ".join(new_val)
+
+        val = cast_str_value(val)
+        if type(val) in [int, str, float]:
+            setattr(obj, cast(str, key), val)
             storage.save()
-        else:
-            print("** no instance found **")
 
     def do_quit(self, _):
         """Quit command to exit the program"""
