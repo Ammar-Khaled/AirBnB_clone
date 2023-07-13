@@ -4,15 +4,15 @@
 
 ## Contents
 
-- [Description]
-- [Future Stages]
-- [Environment]
-- [Fundamental Concepts]
-- [Repo Contents]
-- [Installation]
-- [Usage]
-- [Built with]
-- [AUTHORS]
+- [Description]()
+- [Future Stages]()
+- [Environment]()
+- [Fundamental Concepts]()
+- [Repo Contents]()
+- [Installation]()
+- [Usage]()
+- [Built with]()
+- [AUTHORS]()
 
 ## Description
 - This is not a full implementation but just some features to cover the fundamental concepts of programming.
@@ -63,29 +63,31 @@ This repository constains the following files:
 |[test_state.py](./tests/test_models/test_state.py) | unittests for state |
 |[test_file_storage.py](./tests/test_models/test_engine/test_file_storage.py) | unittests for file_storage |
 |[test_console.py](./tests/test_console.py) | unittests for console |
+|[utils.py](./utils.py) | set of utility functions |
 
 ## Installation
 Clone the repository and run the console.py
 ``` sh
 $ git clone https://github.com/------/AirBnB_clone.git
-$ ./AirBnB_clone/console.py
+$ cd AirBnB_clone
+$ ./console.py
 ```
 
 ## Usage
 
 |   **Command**   |   **Description**   |
 | -------------- | --------------------- |
-| create <class_name> | Creates an instance of given class, saves it and prints its id |
-| show <class_name> <id> or <class_name>.show(<id>) | Prints the string representation of an instance based on the class name and id |
-| all [<class_name>] or <class_name>.all() | Prints all string representation of all instances based or not on the class name |
-| update <class_name> <id> <attribute_name> "<attribute_value>" | Updates an instance based on the class name and id by adding or updating attribute (save the change into the storage) |
-| <class name>.update(<id>, <attribute name>, <attribute value>) | Updates an instance based on the class name and id by adding or updating attribute (save the change into the storage) |
-| <class name>.update(<id>, <dictionary representation>) |  update an instance based on his ID with a dictionary |
-| destroy <class_name> <id> or <class_name>.destroy(<id>) | Deletes an instance based on the class name and id (save the change into the storage) |
-| <class_name>.count() | Retrieve the number of instances of a class |
-| help <command> | Prints information about specific command |
-| quit | Exit the program |
-| EOF | Exit the program |
+| `create <class_name>` | Creates an instance of given class, saves it and prints its id |
+| `show <class_name> <id>` or `<class_name>.show(<id>)` | Prints the string representation of an instance based on the class name and id |
+| `all` or `all <class_name>` or `<class_name>.all()` | Prints all string representation of all instances based or not on the class name |
+| `update <class_name> <id> <attribute_name> "<attribute_value>"` | Updates an instance based on the class name and id by adding or updating attribute (save the change into the storage) |
+| `<class_name>.update(<id>, <attribute_name>, <attribute_value>)` | Updates an instance based on the class name and id by adding or updating attribute (save the change into the storage) |
+| `<class_name>.update(<id>, <dictionary_representation>)` |  update an instance based on his ID with a dictionary |
+| `destroy <class_name> <id>` or `<class_name>.destroy(<id>)` | Deletes an instance based on the class name and id (save the change into the storage) |
+| `<class_name>.count()` | Retrieve the number of instances of a class |
+| `help <command>` | Prints information about specific command |
+| `quit` | Exit the program |
+| `EOF` | Exit the program |
 
 ## The command line interpreter
 
@@ -122,3 +124,6 @@ EOF  create  help  quit
 (hbnb)
 $
 ```
+## Authors
+Fadi Asaad <firon1222@gmail.com>
+Ammar-Khaled <ammar.khaled.github@gmail.com>
