@@ -112,7 +112,16 @@ class HBNBCommand(cmd.Cmd):
         Example:
             update BaseModel d9a1b3bc-c104-4347-8432-33971115763c msg "Hi You"
             """
+
         args = arg.split()
+        try:
+            dictIndex = arg.index('{')
+            if len(args) >= 2:
+                self.custom_update(arg, dictIndex)
+                return
+        except ValueError:
+            pass
+
         results = validate_args(
             args, HBNBCommand.__classes, hasId=True, validateInstance=True,
             hasAttrs=True)
@@ -120,13 +129,6 @@ class HBNBCommand(cmd.Cmd):
             return
 
         _, _, obj, key, val = results
-        if key and key[0] == '{':
-            for k, v in parse_str_dict(arg[arg.index('{'):]):
-                if key in HBNBCommand.__no_mod_attrs:
-                    continue
-                setattr(obj, k, v)
-            storage.save()
-            return
 
         # attributes not allowed to be modified
         if key in HBNBCommand.__no_mod_attrs:
@@ -148,6 +150,27 @@ class HBNBCommand(cmd.Cmd):
             storage.save()
         else:
             print("** not a valid value **")
+
+    def custom_update(self, arg, dictIndex):
+        """This method is an extend for the do_update method to handle values
+        as dict"""
+
+        results = validate_args(
+            arg.split(), HBNBCommand.__classes, hasId=True,
+            validateInstance=True)
+        if not results:
+            return
+
+        _, _, obj, _, _ = results
+        attrs = parse_str_dict(arg[dictIndex:])
+        anyUpdates = False
+        for k, v in attrs:
+            if k in HBNBCommand.__no_mod_attrs:
+                continue
+            setattr(obj, k, v)
+            anyUpdates = True
+        if anyUpdates:
+            storage.save()
 
     def do_count(self, arg):
         """Count the stored instances for a class name
