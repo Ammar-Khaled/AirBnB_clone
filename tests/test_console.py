@@ -1,10 +1,10 @@
 #!/usr/bin/python3
 """UnitTests for the console entry point of the AirBnB clone"""
-from console import HBNBCommand
-from models import storage
-import unittest
-from unittest.mock import patch
 from io import StringIO
+from unittest.mock import patch
+import unittest
+from models import storage
+from console import HBNBCommand
 
 
 class TestConsole(unittest.TestCase):
@@ -205,9 +205,79 @@ Quit command to exit the program
 ** no instance found **
 {0}
 ** instance id missing **
-** instance id missing **
+*** Unknown syntax: BaseModel.show({1})
 ** no instance found **
 {0}
-""".format(obj)
+""".format(obj, self.fakeId)
 
         self.assertEqual(f.getvalue(), output)
+
+    def test_update_command(self):
+        """Test the update command with invalid cases too"""
+
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("create BaseModel")
+
+        objId = f.getvalue().strip()
+        obj = storage.all()["BaseModel.{}".format(objId)]
+
+        self.assertTrue(not hasattr(obj, 'name'))
+
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("update")
+            HBNBCommand().onecmd("update Base")
+            HBNBCommand().onecmd("update BaseModel")
+            HBNBCommand().onecmd("update BaseModel 1234")
+            HBNBCommand().onecmd("update BaseModel {}".format(self.fakeId))
+            HBNBCommand().onecmd("update BaseModel {}".format(objId))
+            HBNBCommand().onecmd("update BaseModel {} name".format(objId))
+            HBNBCommand().onecmd(
+                "update BaseModel {} name Davenchy".format(objId))
+            HBNBCommand().onecmd("update BaseModel {} id \"Hi\"".format(objId))
+            HBNBCommand().onecmd(
+                "update BaseModel {} created_at \"Hi\"".format(objId))
+            HBNBCommand().onecmd(
+                "update BaseModel {} updated_at \"Hi\"".format(objId))
+
+            HBNBCommand().onecmd("BaseModel.update()")
+            HBNBCommand().onecmd("BaseModel.update({})".format(self.fakeId))
+            HBNBCommand().onecmd('BaseModel.update("{}")'.format(self.fakeId))
+            HBNBCommand().onecmd("BaseModel.update(\"{}\")".format(objId))
+            HBNBCommand().onecmd('BaseModel.update("{}", age)'.format(objId))
+            HBNBCommand().onecmd('BaseModel.update("{}", "age")'.format(objId))
+
+        output = """** class name missing **
+** class doesn't exist **
+** instance id missing **
+** instance id missing **
+** no instance found **
+** attribute name missing **
+** value missing **
+** not a valid value **
+** class doesn't allow modification **
+** class doesn't allow modification **
+** class doesn't allow modification **
+** instance id missing **
+*** Unknown syntax: BaseModel.update({})
+** no instance found **
+** attribute name missing **
+*** Unknown syntax: BaseModel.update("{}", age)
+** value missing **
+""".format(self.fakeId, objId)
+
+        self.assertTrue(not hasattr(obj, 'name'))
+        self.assertTrue(not hasattr(obj, 'age'))
+        self.assertEqual(f.getvalue(), output)
+
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd(
+                "update BaseModel {} name \"Davenchy\"".format(objId))
+            HBNBCommand().onecmd(
+                'BaseModel.update("{}", "age", 24)'.format(objId))
+
+        self.assertTrue(hasattr(obj, 'name'))
+        self.assertEqual(getattr(obj, 'name'), 'Davenchy')
+
+        self.assertTrue(hasattr(obj, 'age'))
+        self.assertIsInstance(getattr(obj, 'age'), int)
+        self.assertEqual(getattr(obj, 'age'), 24)
