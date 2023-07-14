@@ -4,17 +4,18 @@
 
 ## Contents
 
-- [Description]()
-- [Future Stages]()
-- [Environment]()
-- [Fundamental Concepts]()
-- [Repo Contents]()
-- [Installation]()
-- [Usage]()
-- [Built with]()
-- [AUTHORS]()
+- [Description](#description)
+- [Future Stages](#future_stages)
+- [Environment](#environment)
+- [Fundamental Concepts](#fundamental_concepts)
+- [Repo Contents](#repo_contents)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Built with](#built_with)
+- [AUTHORS](#authors)
 
 ## Description
+
 - This is not a full implementation but just some features to cover the fundamental concepts of programming.
 
 - This is the first phase of a four phase project, to create a basic clone of the AirBnB web app.
@@ -24,11 +25,13 @@
 In this first phase a basic console was created using the Cmd Python module, to manage the objects of the whole project, being able to implement the methods create, show, update, all, and destroy to the existing classes and subclasses.
 
 ## Future Stages
+
 2. A web application as the GUI of the project.
 3. A database to store the data.
 4. An API that provides a communication between the web application and the server with simple CRUD implementation.
 
 ## Environment
+
 The console was developed in Ubuntu 20.04LTS using python3 (version 3.8.5).
 
 ## Fundamental Concepts
@@ -40,6 +43,7 @@ The console was developed in Ubuntu 20.04LTS using python3 (version 3.8.5).
 5. and more...
 
 ## Repo Contents
+
 This repository constains the following files:
 
 |   **File**   |   **Description**   |
@@ -66,6 +70,7 @@ This repository constains the following files:
 |[utils.py](./utils.py) | set of utility functions |
 
 ## Installation
+
 Clone the repository and run the console.py
 ``` sh
 $ git clone https://github.com/------/AirBnB_clone.git
@@ -79,15 +84,15 @@ $ ./console.py
 | -------------- | --------------------- |
 | `create <class_name>` | Creates an instance of given class, saves it and prints its id |
 | `show <class_name> <id>` or `<class_name>.show(<id>)` | Prints the string representation of an instance based on the class name and id |
+| count <class_name> or `<class_name>.count()` | Retrieve the number of instances of a class |
 | `all` or `all <class_name>` or `<class_name>.all()` | Prints all string representation of all instances based or not on the class name |
+| `destroy <class_name> <id>` or `<class_name>.destroy(<id>)` | Deletes an instance based on the class name and id (save the change into the storage) |
 | `update <class_name> <id> <attribute_name> "<attribute_value>"` | Updates an instance based on the class name and id by adding or updating attribute (save the change into the storage) |
 | `<class_name>.update(<id>, <attribute_name>, <attribute_value>)` | Updates an instance based on the class name and id by adding or updating attribute (save the change into the storage) |
 | `<class_name>.update(<id>, <dictionary_representation>)` |  update an instance based on his ID with a dictionary |
-| `destroy <class_name> <id>` or `<class_name>.destroy(<id>)` | Deletes an instance based on the class name and id (save the change into the storage) |
-| `<class_name>.count()` | Retrieve the number of instances of a class |
 | `help <command>` | Prints information about specific command |
 | `quit` | Exit the program |
-| `EOF` | Exit the program |
+| `EOF` | Exit the program or simply use the keybind <C-d> to send EOF |
 
 ## The command line interpreter
 
@@ -106,7 +111,7 @@ $ ./console.py
 
 Documented commands (type help <topic>):
 ========================================
-EOF  create  help  quit
+EOF  all  count  create  destroy  help  quit  show  update
 
 (hbnb) quit
 $
@@ -119,11 +124,25 @@ $ echo "help" | ./console.py
 (hbnb)
 Documented commands (type help <topic>):
 ========================================
-EOF  create  help  quit
+EOF  all  count  create  destroy  help  quit  show  update
 
 (hbnb)
 $
 ```
+
+- Python like syntax is available too.
+
+```sh
+(hbnb) User.create()
+e09cacba-eb07-4376-86e5-45fc5675e8e1
+(hbnb) User.show("e09cacba-eb07-4376-86e5-45fc5675e8e1")
+[User] (e09cacba-eb07-4376-86e5-45fc5675e8e1) {'id': 'e09cacba-eb07-4376-86e5-45fc5675e8e1', 'created_at': datetime.
+datetime(2023, 7, 14, 21, 36, 54, 182978), 'updated_at': datetime.datetime(2023, 7, 14, 21, 36, 54, 183025)}
+(hbnb)
+```
+
 ## Authors
+
 Fadi Asaad <firon1222@gmail.com>
+
 Ammar-Khaled <ammar.khaled.github@gmail.com>
