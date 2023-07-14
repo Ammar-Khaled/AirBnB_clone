@@ -94,6 +94,14 @@ $ ./console.py
 | `quit` | Exit the program |
 | `EOF` | Exit the program or simply use the keybind <C-d> to send EOF |
 
+## Tests
+
+- To run all tests, run the following command at the root of the project
+
+```sh
+$ python3 -m unittest discover tests
+```
+
 ## The command line interpreter
 
 - The entry point to manipulate the data using the command line.
