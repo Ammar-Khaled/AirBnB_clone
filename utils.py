@@ -122,9 +122,15 @@ def parse_command_syntax(line):
             elif isinstance(arg, ast.Dict):
                 d = dict()
                 for k, v in zip(arg.keys, arg.values):
+                    if not isinstance(k, ast.Constant) or not isinstance(
+                        v, ast.Constant
+                    ):
+                        raise Exception()
                     d[cast(ast.Constant, k).value] = cast(
                         ast.Constant, v).value
                 args.append(d)
+            else:
+                raise Exception()
         return className, action, args
     except Exception:
         return None

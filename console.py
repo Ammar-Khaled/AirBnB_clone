@@ -18,6 +18,7 @@ class HBNBCommand(cmd.Cmd):
 
     prompt = '(hbnb) '
     __classes = [BaseModel, User, State, City, Amenity, Place]
+    __no_mod_attrs = ['id', 'created_at', 'updated_at']
 
     def default(self, line):
         results = parse_command_syntax(line)
@@ -26,8 +27,10 @@ class HBNBCommand(cmd.Cmd):
             if className in classes_to_str(HBNBCommand.__classes):
                 if f'do_{action}' in dir(self):
                     if action == 'update' and len(args) == 3:
+                        val = f'"{args[2]}"' if isinstance(
+                            args[2], str) else str(args[2])
                         command = f'update {className} {args[0]} {args[1]} \
-"{args[2]}"'
+{val}'
                     else:
                         args = [str(a) for a in args]
                         command = f'{action} {className} {" ".join(args)}'
@@ -119,12 +122,14 @@ class HBNBCommand(cmd.Cmd):
         _, _, obj, key, val = results
         if key and key[0] == '{':
             for k, v in parse_str_dict(arg[arg.index('{'):]):
+                if key in HBNBCommand.__no_mod_attrs:
+                    continue
                 setattr(obj, k, v)
-                storage.save()
+            storage.save()
             return
 
         # attributes not allowed to be modified
-        if key in ['id', 'created_at', 'updated_at']:
+        if key in HBNBCommand.__no_mod_attrs:
             print("** class doesn't allow modification **")
             return
 
