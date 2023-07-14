@@ -222,6 +222,7 @@ Quit command to exit the program
         obj = storage.all()["BaseModel.{}".format(objId)]
 
         self.assertTrue(not hasattr(obj, 'name'))
+        self.assertTrue(not hasattr(obj, 'age'))
 
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("update")
@@ -281,3 +282,48 @@ Quit command to exit the program
         self.assertTrue(hasattr(obj, 'age'))
         self.assertIsInstance(getattr(obj, 'age'), int)
         self.assertEqual(getattr(obj, 'age'), 24)
+
+    def test_update_command_dict(self):
+        """Test update command - dict mode"""
+
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("create BaseModel")
+
+        objId = f.getvalue().strip()
+        obj = storage.all()["BaseModel.{}".format(objId)]
+
+        self.assertTrue(not hasattr(obj, 'name'))
+        self.assertTrue(not hasattr(obj, 'age'))
+        self.assertTrue(not hasattr(obj, 'value'))
+
+        with patch('sys.stdout', new=StringIO()) as f:
+            start = 'BaseModel.update("{}"'.format(objId)
+            HBNBCommand().onecmd("BaseModel.update()")
+            HBNBCommand().onecmd("BaseModel.update({})".format(self.fakeId))
+            HBNBCommand().onecmd('BaseModel.update("{}")'.format(self.fakeId))
+            HBNBCommand().onecmd(start + ")")
+            HBNBCommand().onecmd(start + ', {})')
+            HBNBCommand().onecmd(start + ', {name: Davenchy})')
+            HBNBCommand().onecmd(
+                start + ', {"name": "Davenchy", "age": 24, "value": "24"})')
+
+        output = """** instance id missing **
+*** Unknown syntax: BaseModel.update({})
+** no instance found **
+** attribute name missing **
+*** Unknown syntax: BaseModel.update("{}", {{name: Davenchy}})
+""".format(self.fakeId, objId)
+
+        self.assertEqual(f.getvalue(), output)
+
+        self.assertTrue(hasattr(obj, 'name'))
+        self.assertIsInstance(getattr(obj, 'name'), str)
+        self.assertEqual(getattr(obj, 'name'), 'Davenchy')
+
+        self.assertTrue(hasattr(obj, 'age'))
+        self.assertIsInstance(getattr(obj, 'age'), int)
+        self.assertEqual(getattr(obj, 'age'), 24)
+
+        self.assertTrue(hasattr(obj, 'value'))
+        self.assertIsInstance(getattr(obj, 'value'), str)
+        self.assertEqual(getattr(obj, 'value'), '24')
