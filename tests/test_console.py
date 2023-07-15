@@ -14,6 +14,7 @@ class TestConsole(unittest.TestCase):
         """Set up before each test"""
         storage.all().clear()
         self.fakeId = "12345678-1234-1234-1234-123456789098"
+        self.maxDiff = None
 
     def test_help(self):
         """Test help function"""
@@ -84,7 +85,7 @@ Quit command to exit the program
         destroy_out = """** class name missing **
 ** class doesn't exist **
 ** instance id missing **
-** instance id missing **
+** no instance found **
 ** no instance found **
 """
 
@@ -201,7 +202,7 @@ Quit command to exit the program
         output = """** class name missing **
 ** class doesn't exist **
 ** instance id missing **
-** instance id missing **
+** no instance found **
 ** no instance found **
 {0}
 ** instance id missing **
@@ -250,7 +251,7 @@ Quit command to exit the program
         output = """** class name missing **
 ** class doesn't exist **
 ** instance id missing **
-** instance id missing **
+** no instance found **
 ** no instance found **
 ** attribute name missing **
 ** value missing **

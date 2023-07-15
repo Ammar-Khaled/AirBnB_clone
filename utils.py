@@ -47,7 +47,7 @@ def validate_args(args, classes, hasId=False, hasAttrs=False,
     if classname not in classes_to_str(classes):
         print("** class doesn't exist **")
         return
-    if hasId and (len(args) < 2 or len(args[1]) != 36):
+    if hasId and len(args) < 2:
         print("** instance id missing **")
         return
 

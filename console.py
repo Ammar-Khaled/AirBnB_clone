@@ -40,6 +40,9 @@ class HBNBCommand(cmd.Cmd):
             else:
                 print("** class doesn't exist **")
                 return
+        elif line.startswith('.'):
+            print("** class name missing **")
+            return
         print(f"*** Unknown syntax: {line}")
 
     def emptyline(self):
