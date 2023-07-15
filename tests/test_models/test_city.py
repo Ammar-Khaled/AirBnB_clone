@@ -15,12 +15,12 @@ class TestBaseModel(TestCase):
         city = City()
         self.assertEqual(str(city.__class__), "<class 'models.city.City'>")
 
-    def test_User_inheritance_from_BaseModel(self):
+    def test_City_inheritance_from_BaseModel(self):
         """Test if City class inherits from BaseModel class."""
         city = City()
         self.assertIsInstance(city, City)
 
-    def test_User_attributes(self):
+    def test_City_attributes(self):
         """Test attributes of the City class."""
         city = City()
         self.assertTrue(hasattr(city, 'id'))
