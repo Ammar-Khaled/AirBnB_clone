@@ -38,7 +38,7 @@ Quit command to exit the program
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("Base.create()")
 
-        self.assertEqual(f.getvalue(), "*** Unknown syntax: Base.create()\n")
+        self.assertEqual(f.getvalue(), "** class doesn't exist **\n")
 
     def test_create(self):
         """Test create command"""

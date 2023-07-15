@@ -11,13 +11,14 @@ from models.place import Place
 from models.state import State
 from models.city import City
 from models.amenity import Amenity
+from models.review import Review
 
 
 class HBNBCommand(cmd.Cmd):
     """Class HBNBCommand to control the system without GUI"""
 
     prompt = '(hbnb) '
-    __classes = [BaseModel, User, State, City, Amenity, Place]
+    __classes = [BaseModel, User, State, City, Amenity, Place, Review]
     __no_mod_attrs = ['id', 'created_at', 'updated_at']
 
     def default(self, line):
@@ -36,6 +37,9 @@ class HBNBCommand(cmd.Cmd):
                         command = f'{action} {className} {" ".join(args)}'
                     self.onecmd(command)
                     return
+            else:
+                print("** class doesn't exist **")
+                return
         print(f"*** Unknown syntax: {line}")
 
     def emptyline(self):
