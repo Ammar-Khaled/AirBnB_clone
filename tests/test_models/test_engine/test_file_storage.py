@@ -4,6 +4,7 @@
 from unittest import TestCase
 from models import storage
 from models.base_model import BaseModel
+from models.engine.file_storage import FileStorage
 import os
 
 
@@ -27,8 +28,12 @@ class TestFileStorage(TestCase):
         """Test calling the save() method."""
         new_model = BaseModel()
         storage.new(new_model)
+        new_model.name = 'my new model'
         storage.save()
         self.assertTrue(os.path.exists(storage._FileStorage__file_path))
+        all_obj = storage.all()
+        key = new_model.__class__.__name__ + '.' + new_model.id
+        self.assertTrue(key in all_obj.keys())
         os.remove(storage._FileStorage__file_path)
 
     def test_call_for_reload(self):
@@ -40,3 +45,7 @@ class TestFileStorage(TestCase):
         storage.reload()
         new_key = '{}.{}'.format(new_model.__class__.__name__, new_model.id)
         self.assertIn(new_key, storage.all().keys())
+
+    def test_storage_type(self):
+        """Test if 'storage' is an instance of FileStorage."""
+        self.assertIsInstance(storage, FileStorage)
