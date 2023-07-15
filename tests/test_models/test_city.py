@@ -5,6 +5,7 @@
 from unittest import TestCase
 from models.city import City
 from datetime import datetime
+from models.base_model import BaseModel
 
 
 class TestBaseModel(TestCase):
@@ -18,7 +19,7 @@ class TestBaseModel(TestCase):
     def test_City_inheritance_from_BaseModel(self):
         """Test if City class inherits from BaseModel class."""
         city = City()
-        self.assertIsInstance(city, City)
+        self.assertIsInstance(city, BaseModel)
 
     def test_City_attributes(self):
         """Test attributes of the City class."""

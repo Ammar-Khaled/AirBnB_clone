@@ -5,6 +5,7 @@
 from unittest import TestCase
 from models.state import State
 from datetime import datetime
+from models.base_model import BaseModel
 
 
 class TestBaseModel(TestCase):
@@ -18,7 +19,7 @@ class TestBaseModel(TestCase):
     def test_State_inheritance_from_BaseModel(self):
         """Test if State class inherits from BaseModel class."""
         state = State()
-        self.assertIsInstance(state, State)
+        self.assertIsInstance(state, BaseModel)
 
     def test_State_attributes(self):
         """Test attributes of the State class."""

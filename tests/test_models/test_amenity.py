@@ -5,6 +5,7 @@
 from unittest import TestCase
 from models.amenity import Amenity
 from datetime import datetime
+from models.base_model import BaseModel
 
 
 class TestBaseModel(TestCase):
@@ -18,7 +19,7 @@ class TestBaseModel(TestCase):
     def test_Amenity_inheritance_from_BaseModel(self):
         """Test if Amenity class inherits from BaseModel class."""
         amenity = Amenity()
-        self.assertIsInstance(amenity, Amenity)
+        self.assertIsInstance(amenity, BaseModel)
 
     def test_Amenity_attributes(self):
         """Test attributes of the Amenity class."""

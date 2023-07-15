@@ -4,6 +4,7 @@
 
 from unittest import TestCase
 from models.user import User
+from models.base_model import BaseModel
 from datetime import datetime
 
 
@@ -18,7 +19,7 @@ class TestBaseModel(TestCase):
     def test_User_inheritance_from_BaseModel(self):
         """Test if User class inherits from BaseModel class."""
         user = User()
-        self.assertIsInstance(user, User)
+        self.assertIsInstance(user, BaseModel)
 
     def test_User_attributes(self):
         """Test attributes of the User class."""
