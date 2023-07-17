@@ -151,6 +151,6 @@ datetime(2023, 7, 14, 21, 36, 54, 182978), 'updated_at': datetime.datetime(2023,
 
 ## Authors
 
-Fadi Asaad <firon1222@gmail.com>
+Fadi Asaad: [Github](https://github.com/Davenchy) - <firon1222@gmail.com>
 
-Ammar-Khaled <ammar.khaled.github@gmail.com>
+Ammar-Khaled: [Github](https://github.com/Ammar-Khaled) - <ammar.khaled.github@gmail.com>
