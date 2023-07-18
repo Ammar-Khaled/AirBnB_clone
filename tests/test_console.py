@@ -330,50 +330,50 @@ Quit command to exit the program
         self.assertEqual(getattr(obj, 'value'), '24')
 
         def test_EOF(self):
-        """Test quit when EOF."""
+            """Test quit when EOF."""
             with patch('sys.stdout', new=StringIO()) as f:
                 HBNBCommand().onecmd("EOF")
 
         def test_empty_line(self):
-        """Test empty line."""
+            """Test empty line."""
             with patch('sys.stdout', new=StringIO()) as f:
                 HBNBCommand().onecmd("")
                 self.assertEqual(f.getvalue(), "")
 
         def test_Review_all(self):
-        """Test Review.all()"""
+            """Test Review.all()"""
             with patch('sys.stdout', new=StringIO()) as f:
                 HBNBCommand().onecmd("Review.all()")
                 self.assertEqual(f.getvalue(), "")
 
         def test_User_all(self):
-        """Test User.all()"""
+            """Test User.all()"""
             with patch('sys.stdout', new=StringIO()) as f:
-            HBNBCommand().onecmd("User.all()")
-            self.assertEqual(f.getvalue(), "")
+                HBNBCommand().onecmd("User.all()")
+                self.assertEqual(f.getvalue(), "")
 
         def test_State_all(self):
-        """Test State.all()"""
-        with patch('sys.stdout', new=StringIO()) as f:
-        HBNBCommand().onecmd("State.all()")
-        self.assertEqual(f.getvalue(), "")
+            """Test State.all()"""
+            with patch('sys.stdout', new=StringIO()) as f:
+                HBNBCommand().onecmd("State.all()")
+                self.assertEqual(f.getvalue(), "")
 
         def test_City_all(self):
-        """Test City.all()"""
+            """Test City.all()"""
             with patch('sys.stdout', new=StringIO()) as f:
-            HBNBCommand().onecmd("City.all()")
-            self.assertEqual(f.getvalue(), "")
+                HBNBCommand().onecmd("City.all()")
+                self.assertEqual(f.getvalue(), "")
 
 
         def test_Amenity_all(self):
-        """Test Amenity.all()"""
+            """Test Amenity.all()"""
             with patch('sys.stdout', new=StringIO()) as f:
-            HBNBCommand().onecmd("Amenity.all()")
-            self.assertEqual(f.getvalue(), "")
+                HBNBCommand().onecmd("Amenity.all()")
+                self.assertEqual(f.getvalue(), "")
 
         def test_Place_all(self):
-        """Test Place.all()"""
+            """Test Place.all()"""
             with patch('sys.stdout', new=StringIO()) as f:
-            HBNBCommand().onecmd("Place.all()")
-            self.assertEqual(f.getvalue(), "")
+                HBNBCommand().onecmd("Place.all()")
+                self.assertEqual(f.getvalue(), "")
 
