@@ -332,13 +332,13 @@ Quit command to exit the program
         def test_EOF(self):
             """Test quit when EOF."""
             with patch('sys.stdout', new=StringIO()) as f:
-                HBNBCommand().onecmd("EOF")
+                self.assertTrue(HBNBCommand().onecmd("EOF"))
 
         def test_empty_line(self):
             """Test empty line."""
             with patch('sys.stdout', new=StringIO()) as f:
-                HBNBCommand().onecmd("")
-                self.assertEqual(f.getvalue(), "")
+                self.assertFalse(HBNBCommand().onecmd(""))
+                self.assertEqual(f.getvalue().strip(), "")
 
         def test_Review_all(self):
             """Test Review.all()"""
