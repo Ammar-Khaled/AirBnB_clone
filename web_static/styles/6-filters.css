@@ -1,0 +1,16 @@
+ul.popover {
+    background-color: #FAFAFA;
+    width: 100%;
+    border: solid #DDDDDD 1px;
+    border-radius: 4px;
+    display: none;
+    box-sizing: border-box;
+}
+
+ul.popover ul li h2 {
+    font-size: 16px;
+}
+
+.filters div:hover ul.popover{
+    display: block;
+}
